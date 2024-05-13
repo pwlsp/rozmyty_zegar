@@ -1,10 +1,17 @@
 #!/usr/bin/bash
-declare -i h
-declare -i m
-# hh = `date +%H`
-h=$((`date +%H`))
-m=$((`date +%M`))
+declare mode=$1
+declare -i hour
+declare -i min
 
-echo $h
-echo $m
-echo $(($h+$m))
+hour=$(date +%H)
+min=$(date +%M)
+
+echo $hour
+echo $min
+
+# jeżeli bez parametrów
+if (($# == 0)); then
+    echo "tak"
+else
+    echo "nie"
+fi
