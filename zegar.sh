@@ -51,6 +51,18 @@ do_godziny(){
     echo "około ${godzina_dopelniacz[$hour]}"
 }
 
+niedokladny(){
+    local hour=$1
+    local minute=$2
+    # hour=4
+    # minute=29
+    if (($hour >= 22 || $hour <= 3)); then
+        echo "noc"
+    # elif (($hour >= 4 && )); then
+    # elif (()); then
+    fi
+}
+
 declare mode=$1
 declare -i hour
 declare -i minute
@@ -69,5 +81,6 @@ else
         -h | --help) help;;
         -p | --do-pol) do_pol $hour $minute;;
         -g | --do-godziny) do_godziny $hour $minute;;
+        -n | --niedokladny) niedokladny $hour $minute;;
     esac
 fi
