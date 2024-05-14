@@ -12,16 +12,27 @@ declare -a godzina_dopelniacz=(
     "dwudziestej" "dwudziestej pierwszej" "dwudziestej drugiej" "dwudziestej trzeciej" "północy"
 )
 
-declare -a minuta_mianownik=(" " "jeden" "dwa" "trzy" "cztery" "pięć" "sześć" "siedem" "osiem" "dziewięć"
-"dziesięć" "jedenaście" "dwanaście" "trzynaście" "czternaście" "piętnaście" "szesnaście" "siedemnaście" "osiemnaście" "dziewiętnaście"
-"dwadzieścia" "dwadzieścia jeden" "dwadzieścia dwa" "dwadzieścia trzy" "dwadzieścia cztery" "dwadzieścia pięć" "dwadzieścia sześć" "dwadzieścia siedem" "dwadzieścia osiem" "dwadzieścia dziewięć"
-"trzydzieści" "trzydzieści jeden" "trzydzieści dwa" "trzydzieści trzy" "trzydzieści cztery" "trzydzieści pięć" "trzydzieści sześć" "trzydzieści siedem" "trzydzieści osiem" "trzydzieści dziewięć"
-"czterdzieści" "czterdzieści jeden" "czterdzieści dwa" "czterdzieści trzy" "czterdzieści cztery" "czterdzieści pięć" "czterdzieści sześć" "czterdzieści siedem" "czterdzieści osiem" "czterdzieści dziewięć"
-"pięćdziesiąt" "pięćdziesiąt jeden" "pięćdziesiąt dwa" "pięćdziesiąt trzy" "pięćdziesiąt cztery" "pięćdziesiąt pięć" "pięćdziesiąt sześć" "pięćdziesiąt siedem" "pięćdziesiąt osiem" "pięćdziesiąt dziewięć"
+declare -a godzina_narzednik=(
+    "północą" "pierwszą" "drugą" "trzecią" "czwartą" "piątą" "szóstą" "siódmą" "ósmą" "dziewiątą" "dziesiątą"
+    "jedenastą" "dwunastą" "trzynastą" "czternastą" "piętnastą" "szesnastą" "siedemnastą" "osiemnastą" "dziewiętnastą"
+    "dwudziestą" "dwudziestą pierwszą" "dwudziestą drugą" "dwudziestą trzecią" "północą"
+)
+
+declare -a minuta_mianownik=(
+    " " "jeden" "dwa" "trzy" "cztery" "pięć" "sześć" "siedem" "osiem" "dziewięć"
+    "dziesięć" "jedenaście" "dwanaście" "trzynaście" "czternaście" "piętnaście" "szesnaście" "siedemnaście" "osiemnaście" "dziewiętnaście"
+    "dwadzieścia" "dwadzieścia jeden" "dwadzieścia dwa" "dwadzieścia trzy" "dwadzieścia cztery" "dwadzieścia pięć" "dwadzieścia sześć" "dwadzieścia siedem" "dwadzieścia osiem" "dwadzieścia dziewięć"
+    "trzydzieści" "trzydzieści jeden" "trzydzieści dwa" "trzydzieści trzy" "trzydzieści cztery" "trzydzieści pięć" "trzydzieści sześć" "trzydzieści siedem" "trzydzieści osiem" "trzydzieści dziewięć"
+    "czterdzieści" "czterdzieści jeden" "czterdzieści dwa" "czterdzieści trzy" "czterdzieści cztery" "czterdzieści pięć" "czterdzieści sześć" "czterdzieści siedem" "czterdzieści osiem" "czterdzieści dziewięć"
+    "pięćdziesiąt" "pięćdziesiąt jeden" "pięćdziesiąt dwa" "pięćdziesiąt trzy" "pięćdziesiąt cztery" "pięćdziesiąt pięć" "pięćdziesiąt sześć" "pięćdziesiąt siedem" "pięćdziesiąt osiem" "pięćdziesiąt dziewięć"
 )
 
 help(){
-    echo pomoc
+    echo -e "[bez parametrów]\t\tGodzina dokładna"
+    echo -e "-p   |  --do-pol\t\tDokładność do pół godziny"
+    echo -e "-g   |  --do-godziny\t\tDokładność do godziny"
+    echo -e "-n   |  --niedokladny\t\tNiedokładna godzina"
+    echo -e "-a   |  --all\t\t\tWszystkie powyższe operacje"
 }
 
 dokladna(){
@@ -37,14 +48,25 @@ dokladna(){
 do_pol(){
     local hour=$1
     local minute=$2
-    # jakie przedziały tu mają być bo coś się nie zgadza w jego opisie
+    
+    if (($hour == 0 && $minute == 0)); then
+        echo "wybiła północ"
+    elif (($minute == 0)); then
+        echo "godzina ${godzina_mianownik[$hour]}"
+    elif (($minute == 30)); then
+        echo "w pół do ${godzina_dopelniacz[$hour+1]}"
+    elif (($minute > 0 && $minute < 30)); then
+        echo "po ${godzina_dopelniacz[$hour]}"
+        # dopełniacz jest jak miejscownik w tym przypadku
+    elif (($minute > 30 && $minute < 60)); then
+        echo "przed ${godzina_narzednik[$hour+1]}"
+    fi
 }
 
 do_godziny(){
     local hour=$1
     local minute=$2
-    # hour=0
-    # minute=29
+    
     if ((minute >= 30)); then
         hour=$(($hour+1))
     fi
@@ -54,12 +76,19 @@ do_godziny(){
 niedokladny(){
     local hour=$1
     local minute=$2
-    # hour=4
-    # minute=29
-    if (($hour >= 22 || $hour <= 3)); then
+    
+    if (($hour >= 22 || $hour < 4)); then
         echo "noc"
-    # elif (($hour >= 4 && )); then
-    # elif (()); then
+    elif (($hour >= 4 && $hour < 7)); then
+        echo "nad ranem"
+    elif (($hour >= 7 && $hour < 10)); then
+        echo "rano"
+    elif (($hour >= 10 && $hour <12)); then
+        echo "przed południem"
+    elif (($hour >= 12 && $hour <17)); then
+        echo "po południu"
+    elif (($hour >=17 && $hour <22)); then
+        echo "wieczór"
     fi
 }
 
@@ -71,6 +100,10 @@ hour=$((10#$(date +%H)))
 minute=$((10#$(date +%M)))
 # bo gdy minuta/godzina była np. 09 to uznawało to za 9 w systemie oktalnym (error: value to great for base)
 
+hour=$((RANDOM % 24))
+minute=$((RANDOM % 60))
+echo "$hour:$minute"
+
 # jeżeli bez parametrów
 if (($# == 0)); then
     dokladna $hour $minute
@@ -78,9 +111,10 @@ if (($# == 0)); then
 #jeżeli z parametrami
 else
     case $mode in
-        -h | --help) help;;
+        -h | --help | --hlep | --chleb) help;;
         -p | --do-pol) do_pol $hour $minute;;
         -g | --do-godziny) do_godziny $hour $minute;;
         -n | --niedokladny) niedokladny $hour $minute;;
+        -a | --all) echo -n "dokładna: "; dokladna $hour $minute; echo -n "do pół godziny: ";do_pol $hour $minute; echo -n "do godziny: "; do_godziny $hour $minute; echo -n "niedokładny: "; niedokladny $hour $minute;;
     esac
 fi
