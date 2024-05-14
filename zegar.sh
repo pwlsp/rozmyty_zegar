@@ -1,8 +1,15 @@
 #!/usr/bin/bash
 
-declare -a godzina_mianownik=(" " pierwsza druga trzecia czwarta piąta szósta siódma ósma dziewiąta
-dziesiąta jedenasta dwunasta trzynasta czternasta piętnasta szestnasta siedemnasta osiemnasta dziewiętnasta
-dwudziesta "dwudziesta pierwsza" "dwudziesta druga" "dwudziesta trzecia" " "
+declare -a godzina_mianownik=(
+    " " pierwsza druga trzecia czwarta piąta szósta siódma ósma dziewiąta
+    dziesiąta jedenasta dwunasta trzynasta czternasta piętnasta szestnasta siedemnasta osiemnasta dziewiętnasta
+    dwudziesta "dwudziesta pierwsza" "dwudziesta druga" "dwudziesta trzecia" " "
+)
+
+declare -a godzina_dopelniacz=(
+    "północy" "pierwszej" "drugiej" "trzeciej" "czwartej" "piątej" "szóstej" "siódmej" "ósmej" "dziewiątej" "dziesiątej"
+    "jedenastej" "dwunastej" "trzynastej" "czternastej" "piętnastej" "szesnastej" "siedemnastej" "osiemnastej" "dziewiętnastej"
+    "dwudziestej" "dwudziestej pierwszej" "dwudziestej drugiej" "dwudziestej trzeciej" "północy"
 )
 
 declare -a minuta_mianownik=(" " "jeden" "dwa" "trzy" "cztery" "pięć" "sześć" "siedem" "osiem" "dziewięć"
@@ -36,10 +43,12 @@ do_pol(){
 do_godziny(){
     local hour=$1
     local minute=$2
-
+    # hour=0
+    # minute=29
     if ((minute >= 30)); then
-        $hour+=1
+        hour=$(($hour+1))
     fi
+    echo "około ${godzina_dopelniacz[$hour]}"
 }
 
 declare mode=$1
@@ -58,6 +67,7 @@ if (($# == 0)); then
 else
     case $1 in
         -h | --help) help;;
-        -p | --pol-godziny) do_pol;;
+        -p | --do-pol) do_pol $hour $minute;;
+        -g | --do-godziny) do_godziny $hour $minute;;
     esac
 fi
