@@ -65,7 +65,7 @@ if (($# == 0)); then
 
 #jeżeli z parametrami
 else
-    case $1 in
+    case $mode in
         -h | --help) help;;
         -p | --do-pol) do_pol $hour $minute;;
         -g | --do-godziny) do_godziny $hour $minute;;
