@@ -100,9 +100,9 @@ hour=$((10#$(date +%H)))
 minute=$((10#$(date +%M)))
 # bo gdy minuta/godzina była np. 09 to uznawało to za 9 w systemie oktalnym (error: value to great for base)
 
-hour=$((RANDOM % 24))
-minute=$((RANDOM % 60))
-echo "$hour:$minute"
+# hour=$((RANDOM % 24))
+# minute=$((RANDOM % 60))
+# echo "$hour:$minute"
 
 # jeżeli bez parametrów
 if (($# == 0)); then
@@ -115,6 +115,6 @@ else
         -p | --do-pol) do_pol $hour $minute;;
         -g | --do-godziny) do_godziny $hour $minute;;
         -n | --niedokladny) niedokladny $hour $minute;;
-        -a | --all) echo -n "dokładna: "; dokladna $hour $minute; echo -n "do pół godziny: ";do_pol $hour $minute; echo -n "do godziny: "; do_godziny $hour $minute; echo -n "niedokładny: "; niedokladny $hour $minute;;
+        -a | --all) echo -ne "dokładna:\t"; dokladna $hour $minute; echo -ne "do pół godziny:\t";do_pol $hour $minute; echo -ne "do godziny:\t"; do_godziny $hour $minute; echo -ne "niedokładny:\t"; niedokladny $hour $minute;;
     esac
 fi
